@@ -1,0 +1,29 @@
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+*.zip
+*.iml
+*.idea/
+*.vscode/
+# Java specific
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Other common files
+*.iml
+*.idea/
+*.vscode/
