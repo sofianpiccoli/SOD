@@ -14,6 +14,11 @@ public class HiloHumedad extends Thread{
     private double h3;
     private double h4;
     private double h5;
+    private boolean on;
+    
+    public HiloHumedad(){
+        on=false;
+    }
 
     public double getH1() {
         return h1;
@@ -35,5 +40,35 @@ public class HiloHumedad extends Thread{
         return h5;
     }
     
+    public void apagar(){
+        on=false;
+    }
     
+    public int generarValorAleatorio(){
+        return (int) (Math.round(Math.random() * 100));
+    }
+    
+    public void obtenerDatos(){
+        
+    }
+    
+    @Override
+    public void run(){
+        on=true;
+        while (on){
+            //por ahora genera aleatoriamente los valores 
+            //hasta que pueda obtener datos del sensor
+            h1= generarValorAleatorio();
+            h2= generarValorAleatorio();
+            h3= generarValorAleatorio();
+            h4= generarValorAleatorio();
+            h5= generarValorAleatorio();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            
+        }
+    }
 }

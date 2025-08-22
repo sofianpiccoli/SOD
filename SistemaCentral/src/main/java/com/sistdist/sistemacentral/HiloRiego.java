@@ -35,8 +35,20 @@ public class HiloRiego extends Thread{
         return (INR > 0.7 && L == false);
     }
     
-    public void abrirValvula(int valvula){
-        System.out.println("Parcela "+valvula+" regándose");
+    public int tiempoRiego(double inr){
+        int minutos;
+        if (inr >= 0.9) {
+            minutos = 10;
+        } else if (inr >= 0.8) {
+                minutos = 7;
+        } else {
+                minutos = 5;
+        }
+        return minutos;
+    }
+    
+    public void abrirValvula(int valvula, int tiempo){
+        System.out.println("Parcela "+valvula+" regándose por "+tiempo+" minutos");
     }
     
     public void apagar(){
@@ -61,7 +73,7 @@ public class HiloRiego extends Thread{
                     double inr = calculoINR(H, datos.getTemperatura(), datos.getRadiacion());
                     System.out.println("INR"+i+" = "+inr);
                     if (decidirRiego(datos.isLluvia(), inr)){
-                        abrirValvula(i);
+                        abrirValvula(i, tiempoRiego(inr));
                     }
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {

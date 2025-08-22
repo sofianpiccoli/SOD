@@ -23,5 +23,8 @@ public class SistemaCentral {
             System.getLogger(SistemaCentral.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         riego.apagar();
+        hum.apagar();
+        datos.apagar();
+        
     }
 }
