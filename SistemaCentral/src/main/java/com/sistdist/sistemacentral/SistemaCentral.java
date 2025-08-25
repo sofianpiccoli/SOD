@@ -31,6 +31,9 @@ public class SistemaCentral {
                         hum.start();
                         break;
                     case "sensorTemperatura":
+                        System.out.println("pasa por aqui");
+                        HiloTemperatura tem = new HiloTemperatura(s);
+                        tem.start();
                         break;
                 }
                   
