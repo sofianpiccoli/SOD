@@ -35,6 +35,16 @@ public class SistemaCentral {
                         HiloTemperatura tem = new HiloTemperatura(s);
                         tem.start();
                         break;
+                    case "sensorLluvia":
+                        System.out.println("pasa por aqui");
+                        HiloLluvia lluv = new HiloLluvia(s);
+                        lluv.start();
+                        break;
+                    case "sensorRadiacion":
+                        System.out.println("pasa por aqui");
+                        HiloRadiacion rad = new HiloRadiacion(s);
+                        rad.start();
+                        break;
                 }
                   
             }
