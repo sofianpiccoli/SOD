@@ -24,7 +24,9 @@ public class HiloValvula extends Thread{
     
     public void apagar(){
         on = false;
-        System.out.println("Electroválvula de parcela "+parcela+" INACTIVA");
+        while (!on){
+            System.out.println("Electroválvula de parcela "+parcela+" INACTIVA");
+        }
     }
     
     public void run(){

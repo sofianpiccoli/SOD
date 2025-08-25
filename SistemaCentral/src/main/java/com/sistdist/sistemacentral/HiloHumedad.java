@@ -4,23 +4,49 @@
  */
 package com.sistdist.sistemacentral;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+
 /**
  *
  * @author sofianietopiccoli
  */
 public class HiloHumedad extends Thread{
-    private double h1;
-    private double h2;
-    private double h3;
-    private double h4;
-    private double h5;
+    //private double h1;
+    //private double h2;
+    //private double h3;
+    //private double h4;
+    //private double h5;
     private boolean on;
     
-    public HiloHumedad(){
+    Socket clienteHumedad;
+    BufferedReader br;
+    double humedad;
+    
+    /*public HiloHumedad(){
         on=false;
+    }*/
+    
+    public HiloHumedad(Socket ch){
+        clienteHumedad = ch;
+        try {
+            br = new BufferedReader(new InputStreamReader(clienteHumedad.getInputStream()));
+        } catch (IOException ex) {
+            System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+    
+    public double getHumedad() {
+        return humedad;
     }
 
-    public double getH1() {
+    public void setHumedad(double humedad) {
+        this.humedad = humedad;
+    }
+
+    /*public double getH1() {
         return h1;
     }
 
@@ -39,7 +65,7 @@ public class HiloHumedad extends Thread{
     public double getH5() {
         return h5;
     }
-    
+    */
     public void apagar(){
         on=false;
     }
@@ -54,15 +80,20 @@ public class HiloHumedad extends Thread{
     
     @Override
     public void run(){
-        on=true;
-        while (on){
-            //por ahora genera aleatoriamente los valores 
+        while (true){
+            try {
+                String entrada = br.readLine();
+                setHumedad(Double.parseDouble(entrada));
+            } catch (IOException ex) {
+                System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            /*por ahora genera aleatoriamente los valores 
             //hasta que pueda obtener datos del sensor
             h1= generarValorAleatorio();
             h2= generarValorAleatorio();
             h3= generarValorAleatorio();
             h4= generarValorAleatorio();
-            h5= generarValorAleatorio();
+            h5= generarValorAleatorio(); */
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {

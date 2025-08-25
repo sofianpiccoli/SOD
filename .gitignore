@@ -27,3 +27,4 @@ Thumbs.db
 *.iml
 *.idea/
 *.vscode/
+/Bomba/target/

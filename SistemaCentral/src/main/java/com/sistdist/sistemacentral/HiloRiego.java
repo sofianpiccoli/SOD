@@ -58,7 +58,7 @@ public class HiloRiego extends Thread{
     
         @Override
     public void run(){
-        on = true;
+        /*on = true;
         while (on){
             for (int i = 1; i <=5; i++){
                 try {
@@ -85,6 +85,6 @@ public class HiloRiego extends Thread{
             } catch (InterruptedException ex) {
                 System.getLogger(HiloRiego.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
-        }
+        }*/
     }
 }
