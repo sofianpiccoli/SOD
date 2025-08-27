@@ -52,6 +52,7 @@ public class HiloSensado extends Thread {
             System.out.println(getHumedad());
             //escribe en socket
             pw.println(humedad);
+            pw.flush();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {

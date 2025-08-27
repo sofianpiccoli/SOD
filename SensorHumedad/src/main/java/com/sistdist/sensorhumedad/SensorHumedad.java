@@ -27,13 +27,18 @@ public class SensorHumedad {
             Socket cliente = new Socket(IPServidor, 20000);
             pw = new PrintWriter(cliente.getOutputStream());
             pw.println("sensorHumedad");
+            pw.flush();
             HiloSensado sensor = new HiloSensado(cliente, pw);
             sensor.start();
         } catch (UnknownHostException ex) {
+            Logger.getLogger(SensorHumedad.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SensorHumedad.class.getName()).log(Level.SEVERE, null, ex);
+        }/*catch (UnknownHostException ex) {
             System.getLogger(SensorHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
             Logger.getLogger(SensorHumedad.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         
     }
 }
