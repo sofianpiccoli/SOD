@@ -55,6 +55,7 @@ public class HiloLluvia extends Thread{
             try {
                 String entrada = br.readLine();
                 setLluvia(Double.parseDouble(entrada));
+                System.out.println(getLluvia());
             } catch (IOException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
@@ -65,11 +66,11 @@ public class HiloLluvia extends Thread{
             h3= generarValorAleatorio();
             h4= generarValorAleatorio();
             h5= generarValorAleatorio(); */
-            try {
+            /*try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
+            }*/
             
         }
     }
