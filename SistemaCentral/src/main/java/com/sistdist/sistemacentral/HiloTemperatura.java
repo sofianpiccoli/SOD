@@ -41,13 +41,6 @@ public class HiloTemperatura extends Thread{
         on=false;
     }
     
-    public int generarValorAleatorio(){
-        return (int) (Math.round(Math.random() * 100));
-    }
-    
-    public void obtenerDatos(){
-        
-    }
     
     @Override
     public void run(){

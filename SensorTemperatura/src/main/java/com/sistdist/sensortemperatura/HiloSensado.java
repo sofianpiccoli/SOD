@@ -4,7 +4,9 @@
  */
 package com.sistdist.sensortemperatura;
 
+import java.io.PrintWriter;
 import java.lang.Math.*;
+import java.net.Socket;
 
 /**
  *
@@ -13,9 +15,13 @@ import java.lang.Math.*;
 public class HiloSensado extends Thread{
     private boolean on;
     private double temperatura;
+    Socket cnxServidor;
+    PrintWriter pw;
     
-    public HiloSensado(){
+    public HiloSensado(Socket s, PrintWriter imp){
         on = false;
+        cnxServidor = s;
+        pw = imp;
     }
     
     public void encender(){
@@ -35,7 +41,7 @@ public class HiloSensado extends Thread{
         return t;
     }
     
-    public double leerTemperatura(){
+    public double getTemperatura(){
         return temperatura;
     }
     
@@ -44,7 +50,8 @@ public class HiloSensado extends Thread{
         temperatura=25;
         while (on){
             temperatura = generarTemperatura();
-            System.out.println(temperatura+" °C");
+            pw.println(temperatura);
+            pw.flush();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {

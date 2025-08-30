@@ -4,7 +4,9 @@
  */
 package com.sistdist.sensorhumedad2;
 
+import java.io.PrintWriter;
 import java.lang.Math.*;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,14 +17,18 @@ import java.util.logging.Logger;
 public class HiloSensado extends Thread {
     
     private boolean on;
-    private int humedad;
+    private double humedad;
+    Socket cnxServidor;
+    PrintWriter pw;
     
-    public HiloSensado(){
+    public HiloSensado(Socket s, PrintWriter imp){
         on = false;
+        cnxServidor = s;
+        pw = imp;
     }
     
-    public int generarHumedad(){
-        return (int) (Math.round(Math.random() * 100));
+    public double generarHumedad(){
+        return (Math.round(Math.random() * 100));
     }
     
     public void encender(){
@@ -33,7 +39,7 @@ public class HiloSensado extends Thread {
         on = false;
     }
     
-    public double leerHumedad(){
+    public double getHumedad(){
         return humedad;
     }
     
@@ -42,7 +48,11 @@ public class HiloSensado extends Thread {
         //Mide la humedad mientras esté prendido
         while(on){
             humedad = generarHumedad();
-            System.out.println(humedad+"%");
+            
+            System.out.println(getHumedad());
+            //escribe en socket
+            pw.println(humedad);
+            pw.flush();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {

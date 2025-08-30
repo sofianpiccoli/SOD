@@ -26,7 +26,7 @@ public class SensorHumedad {
             IPServidor = InetAddress.getByName("127.0.0.1"); //localhost
             Socket cliente = new Socket(IPServidor, 20000);
             pw = new PrintWriter(cliente.getOutputStream());
-            pw.println("sensorHumedad");
+            pw.println("sensorHumedad1");
             pw.flush();
             HiloSensado sensor = new HiloSensado(cliente, pw);
             sensor.start();

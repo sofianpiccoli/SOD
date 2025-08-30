@@ -4,7 +4,14 @@
 
 package com.sistdist.sensortemperatura;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.time.Duration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,12 +20,20 @@ import java.time.Duration;
 public class SensorTemperatura {
 
     public static void main(String[] args) {
-        HiloSensado sensorT = new HiloSensado();
-        sensorT.start();
+        InetAddress IPServidor;
+        PrintWriter pw;
         try {
-            Thread.sleep(15000);
-        } catch (InterruptedException ex) {
-            System.getLogger(SensorTemperatura.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            IPServidor = InetAddress.getByName("127.0.0.1"); //localhost
+            Socket cliente = new Socket(IPServidor, 20000);
+            pw = new PrintWriter(cliente.getOutputStream());
+            pw.println("sensorTemperatura");
+            pw.flush();
+            HiloSensado sensorT = new HiloSensado(cliente, pw);
+            sensorT.start();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(SensorTemperatura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SensorTemperatura.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

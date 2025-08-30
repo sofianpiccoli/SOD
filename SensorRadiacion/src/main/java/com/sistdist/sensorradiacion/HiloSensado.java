@@ -4,6 +4,9 @@
  */
 package com.sistdist.sensorradiacion;
 
+import java.io.PrintWriter;
+import java.net.Socket;
+
 /**
  *
  * @author sofianietopiccoli
@@ -11,20 +14,28 @@ package com.sistdist.sensorradiacion;
 public class HiloSensado extends Thread{
     private boolean on;
     private double radiacion;
+    Socket cnxServidor;
+    PrintWriter pw;
     
-    public HiloSensado() {
+    public HiloSensado(Socket s, PrintWriter imp){
         on = false;
+        cnxServidor = s;
+        pw = imp;
     }
     
     public void encender(){
         on = true;
     }
     
+    public void apagar(){
+        on = false;
+    }
+    
     public double generarRadiacion(){
         return (Math.random() * 1000);
     }
     
-    public double leerRadiacion(){
+    public double getRadiacion(){
         return radiacion;
     }
     
@@ -33,7 +44,8 @@ public class HiloSensado extends Thread{
         on = true;
         while (on){
             radiacion = generarRadiacion();
-            System.out.println("Radiacion: "+radiacion+" W/m²");
+            pw.println(radiacion);
+            pw.flush();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {

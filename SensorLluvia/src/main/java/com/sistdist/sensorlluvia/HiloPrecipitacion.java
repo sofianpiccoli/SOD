@@ -4,16 +4,24 @@
  */
 package com.sistdist.sensorlluvia;
 
+import java.io.PrintWriter;
+import java.net.Socket;
+
 /**
  *
  * @author sofianietopiccoli
  */
 public class HiloPrecipitacion extends Thread {
+    
     private boolean on;
     private boolean lluvia;
+    Socket cnxServidor;
+    PrintWriter pw;
     
-    public HiloPrecipitacion(){
-        on = true;
+    public HiloPrecipitacion(Socket s, PrintWriter imp){
+        on = false;
+        cnxServidor = s;
+        pw = imp;
     }
     
     public void encender(){
@@ -36,7 +44,8 @@ public class HiloPrecipitacion extends Thread {
         on=true;
         while (on){
             lluvia = generarLluvia();
-            System.out.println("Llueve = "+lluvia);
+            pw.println(lluvia);
+            pw.flush();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {

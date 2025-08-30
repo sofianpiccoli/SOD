@@ -4,6 +4,14 @@
 
 package com.sistdist.sensorlluvia;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author sofianietopiccoli
@@ -11,13 +19,20 @@ package com.sistdist.sensorlluvia;
 public class SensorLluvia {
 
     public static void main(String[] args) {
-        HiloPrecipitacion sensor = new HiloPrecipitacion();
-        sensor.start();
+        InetAddress IPServidor;
+        PrintWriter pw;
         try {
-            Thread.sleep(15000);
-        } catch (InterruptedException ex) {
-            System.getLogger(SensorLluvia.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-                
+            IPServidor = InetAddress.getByName("127.0.0.1"); //localhost
+            Socket cliente = new Socket(IPServidor, 20000);
+            pw = new PrintWriter(cliente.getOutputStream());
+            pw.println("sensorLluvia");
+            pw.flush();
+            HiloPrecipitacion sensor = new HiloPrecipitacion(cliente, pw);
+            sensor.start();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(SensorLluvia.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SensorLluvia.class.getName()).log(Level.SEVERE, null, ex);
+        }      
     }
 }

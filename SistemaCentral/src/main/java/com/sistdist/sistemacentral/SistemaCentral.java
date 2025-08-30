@@ -25,23 +25,35 @@ public class SistemaCentral {
                 BufferedReader bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 tipoDispositivo = bf.readLine();
                 switch(tipoDispositivo){
-                    case "sensorHumedad":
-                        System.out.println("pasa por aqui");
-                        HiloHumedad hum = new HiloHumedad(s);
-                        hum.start();
+                    case "sensorHumedad1":
+                        HiloHumedad hum1 = new HiloHumedad(s);
+                        hum1.start();
+                        break;
+                    case "sensorHumedad2":
+                        HiloHumedad hum2 = new HiloHumedad(s);
+                        hum2.start();
+                        break;
+                    case "sensorHumedad3":
+                        HiloHumedad hum3 = new HiloHumedad(s);
+                        hum3.start();
+                        break;
+                    case "sensorHumedad4":
+                        HiloHumedad hum4 = new HiloHumedad(s);
+                        hum4.start();
+                        break;  
+                    case "sensorHumedad5":
+                        HiloHumedad hum5 = new HiloHumedad(s);
+                        hum5.start();
                         break;
                     case "sensorTemperatura":
-                        System.out.println("pasa por aqui");
                         HiloTemperatura tem = new HiloTemperatura(s);
                         tem.start();
                         break;
                     case "sensorLluvia":
-                        System.out.println("pasa por aqui");
                         HiloLluvia lluv = new HiloLluvia(s);
                         lluv.start();
                         break;
                     case "sensorRadiacion":
-                        System.out.println("pasa por aqui");
                         HiloRadiacion rad = new HiloRadiacion(s);
                         rad.start();
                         break;
