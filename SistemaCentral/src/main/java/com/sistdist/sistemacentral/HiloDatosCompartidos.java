@@ -29,6 +29,20 @@ public class HiloDatosCompartidos extends Thread {
     public boolean isLluvia() {
         return lluvia;
     }
+
+    public void setTemperatura(double temperatura) {
+        this.temperatura = temperatura;
+    }
+
+    public void setRadiacion(double radiacion) {
+        this.radiacion = radiacion;
+    }
+
+    public void setLluvia(boolean lluvia) {
+        this.lluvia = lluvia;
+    }
+    
+    
     
     public void apagar(){
         on=false;

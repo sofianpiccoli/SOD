@@ -14,11 +14,28 @@ import java.util.Map;
 public class HiloRiego extends Thread{
     private double w1, w2, w3;
     private boolean on;
-    private HiloDatosCompartidos datos;
+    private HiloLluvia lluvia;
+    private HiloRadiacion radiacion;
+    private HiloTemperatura temperatura;
     private Map<Integer, HiloHumedad> humedades;
     private Map<Integer, PrintWriter> valvulas;
 
     public HiloRiego(double w1, double w2, double w3, 
+                    HiloLluvia lluvia, HiloRadiacion radiacion, HiloTemperatura temperatura, 
+                    Map<Integer, HiloHumedad> humedades, Map<Integer, PrintWriter> valvulas) {
+        this.w1 = w1;
+        this.w2 = w2;
+        this.w3 = w3;
+        this.on = true;
+        this.lluvia = lluvia;
+        this.radiacion = radiacion;
+        this.temperatura = temperatura;
+        this.humedades = humedades;
+        this.valvulas = valvulas;
+    }
+
+    
+    /*public HiloRiego(double w1, double w2, double w3, 
                      HiloDatosCompartidos datos,
                      Map<Integer, HiloHumedad> humedades) {
         this.w1 = w1;
@@ -27,11 +44,39 @@ public class HiloRiego extends Thread{
         this.datos = datos;
         this.humedades = humedades;
         this.on = true;
+    }*/
+
+    public HiloLluvia getLluvia() {
+        return lluvia;
     }
+
+    public void setLluvia(HiloLluvia lluvia) {
+        this.lluvia = lluvia;
+    }
+
+    public HiloRadiacion getRadiacion() {
+        return radiacion;
+    }
+
+    public void setRadiacion(HiloRadiacion radiacion) {
+        this.radiacion = radiacion;
+    }
+
+    public HiloTemperatura getTemperatura() {
+        return temperatura;
+    }
+
+    public void setTemperatura(HiloTemperatura temperatura) {
+        this.temperatura = temperatura;
+    }
+    
+    
 
     public void setValvulas(Map<Integer, PrintWriter> valvulas) {
         this.valvulas = valvulas;
     }
+    
+    
     public double calculoINR(double H, double T, double R){
         double inr = w1*(1-H/100) + w2*(T/40) + w3*(R/1000);
         return inr;
@@ -65,12 +110,26 @@ public class HiloRiego extends Thread{
         @Override
     public void run() {
         while (on) {
+            if (temperatura == null || radiacion == null || lluvia == null) {
+            System.out.println("Esperando sensores...");
+            try {
+                Thread.sleep(2000); // espero un poco y sigo chequeando
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            continue; // vuelve al inicio del while
+            }
+            
+            
             for (int parcela : humedades.keySet()) {
                 double H = humedades.get(parcela).getHumedad();
-                double inr = calculoINR(H, datos.getTemperatura(), datos.getRadiacion());
+                double T = temperatura.getTemperatura();
+                double R = radiacion.getRadiacion();
+                boolean L = lluvia.getLluvia();
+                double inr = calculoINR(H, T, R);
                 System.out.println("INR parcela " + parcela + " = " + inr);
 
-                if (decidirRiego(datos.isLluvia(), inr)) {
+                if (decidirRiego(L, inr) && valvulas.containsKey(parcela)) {
                     int minutos = tiempoRiego(inr);
                     abrirValvula(parcela, minutos);
                 }
@@ -85,12 +144,21 @@ public class HiloRiego extends Thread{
     }
 
     private void abrirValvula(int parcela, int tiempo) {
-        if (valvulas != null && valvulas.containsKey(parcela)) {
-            PrintWriter pw = valvulas.get(parcela);
-            pw.println("TIEMPO=" + tiempo);
-            pw.flush();
-            System.out.println("Orden enviada -> Parcela " + parcela + " regando " + tiempo + " minutos");
+        if (valvulas == null) return;
+
+        // Espera hasta que la válvula se conecte
+        while (!valvulas.containsKey(parcela)) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+        PrintWriter pw = valvulas.get(parcela);
+        pw.println("TIEMPO=" + tiempo);
+        pw.flush();
+        System.out.println("Orden enviada -> Parcela " + parcela + " regando " + tiempo + " minutos");
     }
 }
     //public void run(){

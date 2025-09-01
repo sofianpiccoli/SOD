@@ -4,6 +4,13 @@
 
 package com.sistdist.electrovalvula3;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author sofianietopiccoli
@@ -11,13 +18,21 @@ package com.sistdist.electrovalvula3;
 public class Electrovalvula3 {
 
     public static void main(String[] args) {
-        HiloValvula electrovalvula3 = new HiloValvula(3);
-            electrovalvula3.start();
-            try {
-                Thread.sleep(15000);
-            } catch (InterruptedException ex) {
-                System.getLogger(Electrovalvula3.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-            electrovalvula3.apagar();
+        try {
+            InetAddress IPServidor = InetAddress.getByName("127.0.0.1");
+            Socket cliente = new Socket(IPServidor, 20000);
+
+            // Me identifico con el sistema central
+            PrintWriter pw = new PrintWriter(cliente.getOutputStream(), true);
+            pw.println("HelectroValvula3"); 
+            pw.flush();
+
+            // Arranco el hilo que escucha órdenes
+            HiloValvula valvula = new HiloValvula(cliente, 2);
+            valvula.start();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Electrovalvula3.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

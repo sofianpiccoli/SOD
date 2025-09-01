@@ -47,7 +47,7 @@ public class HiloSensado extends Thread{
     
     public void run(){
         on = true;
-        temperatura=25;
+        temperatura=29;
         while (on){
             temperatura = generarTemperatura();
             pw.println(temperatura);

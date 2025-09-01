@@ -4,38 +4,51 @@
  */
 package com.sistdist.electrovalvula3;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author sofianietopiccoli
  */
 public class HiloValvula extends Thread{
-    private boolean on;
     private int parcela;
-    
-    public HiloValvula(int parcela){
-        on = false;
+    private Socket socket;
+    private BufferedReader br;
+
+    public HiloValvula(Socket socket, int parcela) throws IOException {
         this.parcela = parcela;
+        this.socket = socket;
+        this.br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
-    
-    public void encender(){
-        on = true;
-        System.out.println("Electroválvula de parcela "+parcela+" ACTIVA");
-    }
-    
-    public void apagar(){
-        on = false;
-        System.out.println("Electroválvula de parcela "+parcela+" INACTIVA");
-    }
-    
-    public void run(){
-        on = true;
-        while (on){
-            System.out.println("Electroválvula de parcela "+parcela+" ACTIVA");
-            try {
-            Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-                System.getLogger(HiloValvula.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                String mensaje = br.readLine();  // espero una orden del sistema central
+                if (mensaje != null && mensaje.startsWith("TIEMPO=")) {
+                    int tiempo = Integer.parseInt(mensaje.split("=")[1]);
+                    activarValvula(tiempo);
+                }
             }
+        } catch (IOException ex) {
+            Logger.getLogger(HiloValvula.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void activarValvula(int minutos) {
+        System.out.println("Electroválvula parcela " + parcela + 
+                           " regando durante " + minutos + " minutos...");
+        try {
+            Thread.sleep(minutos * 1000); // por simplicidad 1s = 1 minuto
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Electroválvula parcela " + parcela + " apagada.");
     }
 }

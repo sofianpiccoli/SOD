@@ -23,15 +23,18 @@ public class SistemaCentral {
         String tipoDispositivo = " ";
         Map<Integer, HiloHumedad> humedades = new HashMap<>();
         Map<Integer, PrintWriter> valvulas = new HashMap<>();
-        HiloDatosCompartidos datos = new HiloDatosCompartidos();
+        HiloLluvia lluvia = null;
+        HiloRadiacion radiacion = null;
+        HiloTemperatura temperatura = null;
+
         try {
             ServerSocket server = new ServerSocket(20000);
+            // Arranco el hilo de riego una vez
+            HiloRiego riego = new HiloRiego(0.5, 0.3, 0.2, lluvia, radiacion, temperatura, humedades, valvulas);
+            riego.setValvulas(valvulas);
+            riego.start();
             while (true){
                 Socket s = server.accept(); //puerto aleatorio misma dir de internet local
-                // Arranco el hilo de riego una vez
-                HiloRiego riego = new HiloRiego(0.5, 0.3, 0.2, datos, humedades);
-                riego.setValvulas(valvulas);
-                riego.start();
                 BufferedReader bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 tipoDispositivo = bf.readLine();
                 switch(tipoDispositivo){
@@ -68,14 +71,17 @@ public class SistemaCentral {
                     case "sensorTemperatura":
                         HiloTemperatura tem = new HiloTemperatura(s);
                         tem.start();
+                        riego.setTemperatura(tem);
                         break;
                     case "sensorLluvia":
                         HiloLluvia lluv = new HiloLluvia(s);
                         lluv.start();
+                        riego.setLluvia(lluv);
                         break;
                     case "sensorRadiacion":
                         HiloRadiacion rad = new HiloRadiacion(s);
                         rad.start();
+                        riego.setRadiacion(rad);
                         break;
                     case "HelectroValvula1":
                         System.out.println("soy la electrovalvula 1");
@@ -102,7 +108,7 @@ public class SistemaCentral {
                        PrintWriter pw5 = new PrintWriter(s.getOutputStream(), true);
                        valvulas.put(5, pw5);
                        break;
-
+                        
                 }}} catch (IOException ex) {
             System.getLogger(SistemaCentral.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
