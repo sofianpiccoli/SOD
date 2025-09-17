@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  *
- * @author sofianietopiccoli
+ * @author lucianafigue
  */
 public class HiloRiego extends Thread{
     private double w1, w2, w3;
@@ -77,7 +77,7 @@ public class HiloRiego extends Thread{
     }
     
     
-    public double calculoINR(double H, double T, double R){
+    /*public double calculoINR(double H, double T, double R){
         double inr = w1*(1-H/100) + w2*(T/40) + w3*(R/1000);
         return inr;
     }
@@ -107,7 +107,7 @@ public class HiloRiego extends Thread{
     }
     
     
-        @Override
+    @Override
     public void run() {
         while (on) {
             if (temperatura == null || radiacion == null || lluvia == null) {
@@ -120,23 +120,23 @@ public class HiloRiego extends Thread{
             continue; // vuelve al inicio del while
             }
             
-            
+            // Recorremos las parcelas con sensor de humedad
             for (int parcela : humedades.keySet()) {
                 double H = humedades.get(parcela).getHumedad();
                 double T = temperatura.getTemperatura();
                 double R = radiacion.getRadiacion();
                 boolean L = lluvia.getLluvia();
-                double inr = calculoINR(H, T, R);
-                System.out.println("INR parcela " + parcela + " = " + inr);
+                double inr = SistemaCentral.calculoINR(H, T, R);
+                System.out.println("Parcela " + parcela + " -> INR = " + inr);
 
-                if (decidirRiego(L, inr) && valvulas.containsKey(parcela)) {
-                    int minutos = tiempoRiego(inr);
+                if (SistemaCentral.decidirRiego(L, inr) && valvulas.containsKey(parcela)) {
+                    int minutos = SistemaCentral.tiempoRiego(inr);
                     abrirValvula(parcela, minutos);
                 }
             }
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(5000);// espera entre chequeos
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
