@@ -19,6 +19,7 @@ public class Electrovalvula5 {
 
     public static void main(String[] args) {
         try {
+            // Se conecta al sistema central e informa su ID (ej: electroValvula1)
             InetAddress IPServidor = InetAddress.getByName("127.0.0.1");
             Socket cliente = new Socket(IPServidor, 20000);
 
@@ -27,7 +28,7 @@ public class Electrovalvula5 {
             pw.println("electroValvula5"); 
             pw.flush();
 
-            // Arranco el hilo que escucha órdenes
+            // Inicia el hilo que escucha órdenes del sistema central
             HiloValvula valvula = new HiloValvula(cliente, 2);
             valvula.start();
 
