@@ -22,11 +22,16 @@ public class SensorRadiacion {
         InetAddress IPServidor;
         PrintWriter pw;
         try {
+            // Conexión al sistema central en localhost:20000
             IPServidor = InetAddress.getByName("127.0.0.1"); //localhost
             Socket cliente = new Socket(IPServidor, 20000);
+            
+             // Identificación como sensor de radiación
             pw = new PrintWriter(cliente.getOutputStream());
             pw.println("sensorRadiacion");
             pw.flush();
+            
+            // Lanza el hilo de sensado
             HiloSensado sensorR = new HiloSensado(cliente, pw);
             sensorR.start();
         } catch (UnknownHostException ex) {

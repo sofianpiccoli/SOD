@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  *
- * @author lucianafigue
+ * @author lucianafigueroa
  */
 public class HiloRiego extends Thread{
     private double w1, w2, w3;
@@ -72,6 +72,7 @@ public void run() {
     boolean lloviendo = false; // flag para no repetir la acción
     
     while (on) {
+        // Espera hasta que todos los sensores estén conectados
         if (temperatura == null || radiacion == null || lluvia == null) {
             System.out.println("Esperando sensores...");
             try {
@@ -84,6 +85,7 @@ public void run() {
 
         boolean L = lluvia.getLluvia();
 
+        // Si llueve → cerrar todas las válvulas
         if (L) {
             if (!lloviendo) { // solo ejecutar la primera vez que detecta lluvia
                 System.out.println("¡Está lloviendo! Cerrando todas las válvulas...");
@@ -96,13 +98,17 @@ public void run() {
             lloviendo = false; // se resetea cuando deja de llover
         }
 
+        // Por cada parcela con sensor de humedad
         for (int parcela : humedades.keySet()) {
             double H = humedades.get(parcela).getHumedad();
             double T = temperatura.getTemperatura();
             double R = radiacion.getRadiacion();
+            
+            // Cálculo del INR
             double inr = SistemaCentral.calculoINR(H, T, R);
             System.out.println("Parcela " + parcela + " -> INR = " + inr);
 
+            // Si es necesario regar → abrir válvula
             if (SistemaCentral.decidirRiego(L, inr) && valvulas.containsKey(parcela)) {
                 int minutos = SistemaCentral.tiempoRiego(inr);
                 abrirValvula(parcela, minutos);
@@ -137,6 +143,7 @@ public void run() {
                     return;
                 }
             }
+            // Envía orden a la electroválvula correspondiente
             PrintWriter pw = valvulas.get(parcela);
             if (pw == null) {
                 System.out.println("La válvula " + parcela + " desapareció antes de enviar la orden.");
@@ -151,6 +158,7 @@ public void run() {
     public void cerrarValvula(int parcela) {
         if (valvulas == null || !valvulas.containsKey(parcela)) return;
 
+        // Orden de cierre inmediato
         PrintWriter pw = valvulas.get(parcela);
         pw.println("CERRAR");
         pw.flush();

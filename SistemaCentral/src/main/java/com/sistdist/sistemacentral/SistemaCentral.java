@@ -15,10 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
- * @author lucianafigue
+ * @author lucianafigueroa
  */
 public class SistemaCentral {
-
+    
     // Pesos para el cálculo de INR
     private static final double W1 = 0.5;
     private static final double W2 = 0.3;
@@ -26,24 +26,33 @@ public class SistemaCentral {
 
     public static void main(String[] args) {
         
-        
-        String tipoDispositivo = " ";
+        // Mapas concurrentes para manejar datos en paralelo
         Map<Integer, HiloHumedad> humedades = new ConcurrentHashMap<>();
         Map<Integer, PrintWriter> valvulas = new ConcurrentHashMap<>();
+        
+        String tipoDispositivo = " ";
+        
+        // Se inicializan hilos para los sensores principales
         HiloLluvia lluvia = null;
         HiloRadiacion radiacion = null;
         HiloTemperatura temperatura = null;
 
         try {
+            // Servidor central en el puerto 20000
             ServerSocket server = new ServerSocket(20000);
-            // Arranco el hilo de riego una vez
+            
+            // Hilo principal que decide riego. Arranco el hilo de riego una vez
             HiloRiego riego = new HiloRiego(0.5, 0.3, 0.2, lluvia, radiacion, temperatura, humedades, valvulas);
             riego.setValvulas(valvulas);
             riego.start();
+            
+            // Espera conexiones de sensores y válvulas
             while (true) {
                 Socket s = server.accept(); //puerto aleatorio misma dir de internet local
                 BufferedReader bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                tipoDispositivo = bf.readLine();
+                tipoDispositivo = bf.readLine(); // Identificación del dispositivo
+                
+                // Dependiendo del tipo de dispositivo conectado, se crea un hilo
                 switch (tipoDispositivo) {
                     case "sensorHumedad1":
                         System.out.println("soy el sensor de humedad 1");
@@ -124,14 +133,17 @@ public class SistemaCentral {
 
     }
 
+    // Cálculo del INR (usa humedad, temperatura y radiación)
     public static double calculoINR(double H, double T, double R) {
         return W1 * (1 - H / 100) + W2 * (T / 40) + W3 * (R / 1000);
     }
 
+    // Decide si se riega o no (según INR y lluvia)
     public static boolean decidirRiego(boolean L, double INR) {
         return (INR > 0.7 && !L);
     }
 
+    // Determina cuánto tiempo regar (dependiendo del INR)
     public static int tiempoRiego(double inr) {
         if (inr >= 0.9) {
             return 10;

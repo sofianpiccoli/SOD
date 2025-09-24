@@ -32,6 +32,7 @@ public class HiloHumedad extends Thread{
     public HiloHumedad(Socket ch){
         clienteHumedad = ch;
         try {
+            // Se conecta al sensor de humedad
             br = new BufferedReader(new InputStreamReader(clienteHumedad.getInputStream()));
         } catch (IOException ex) {
             System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -82,6 +83,7 @@ public class HiloHumedad extends Thread{
     public void run(){
         while (true){
             try {
+                // Recibe y guarda la humedad actual de la parcela
                 String entrada = br.readLine();
                 setHumedad(Double.parseDouble(entrada));
                 System.out.println("Humedad = "+getHumedad());

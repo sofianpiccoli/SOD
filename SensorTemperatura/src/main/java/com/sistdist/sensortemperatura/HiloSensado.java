@@ -13,15 +13,15 @@ import java.net.Socket;
  * @author sofianietopiccoli
  */
 public class HiloSensado extends Thread{
-    private boolean on;
-    private double temperatura;
-    Socket cnxServidor;
-    PrintWriter pw;
+    private boolean on; // Indica si el sensor está encendido
+    private double temperatura; // Última lectura de temperatura
+    Socket cnxServidor; // Conexión al sistema central
+    PrintWriter pw; // Canal de salida para enviar datos
     
     public HiloSensado(Socket s, PrintWriter imp){
-        on = false;
-        cnxServidor = s;
-        pw = imp;
+        on = false; // Inicialmente apagado
+        cnxServidor = s; // Guarda la conexión
+        pw = imp;   // Guarda el canal de escritura
     }
     
     public void encender(){
@@ -32,24 +32,28 @@ public class HiloSensado extends Thread{
         on = false;
     }
     
+    // Genera la próxima temperatura a enviar, con una pequeña variación aleatoria
     public double generarTemperatura(){
-        double cambio = (Math.random()*2 - 1);
-        double t = temperatura + cambio;
-        if (t > 40){
+        double cambio = (Math.random()*2 - 1); // Variación entre -1 y +1
+        double t = temperatura + cambio; // Se suma al valor actual
+        if (t > 40){ // Límite máximo = 40°C
             t = 40;
         }
         return t;
     }
     
     public double getTemperatura(){
-        return temperatura;
+        return temperatura;  // Devuelve el valor actual
     }
     
     public void run(){
         on = true;
-        temperatura=29;
+        temperatura=29; // Temperatura inicial
         while (on){
+            // Genera un nuevo valor de temperatura
             temperatura = generarTemperatura();
+            
+            // Envía la lectura al sistema central
             pw.println(temperatura);
             pw.flush();
             try {

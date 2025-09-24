@@ -13,14 +13,14 @@ import java.net.Socket;
  */
 public class HiloSensado extends Thread{
     private boolean on;
-    private double radiacion;
-    Socket cnxServidor;
-    PrintWriter pw;
+    private double radiacion; // Última lectura de radiación
+    Socket cnxServidor;   // Conexión al sistema central
+    PrintWriter pw;   // Canal de salida para enviar datos
     
     public HiloSensado(Socket s, PrintWriter imp){
         on = false;
-        cnxServidor = s;
-        pw = imp;
+        cnxServidor = s;   // Guarda la conexión al servidor
+        pw = imp;   // Guarda el canal de escritura
     }
     
     public void encender(){
@@ -31,6 +31,7 @@ public class HiloSensado extends Thread{
         on = false;
     }
     
+     // Genera un valor de radiación aleatorio entre 0 y 1000
     public double generarRadiacion(){
         return (Math.random() * 1000);
     }
@@ -43,7 +44,10 @@ public class HiloSensado extends Thread{
     public void run(){
         on = true;
         while (on){
+            // Genera y guarda un nuevo valor de radiación
             radiacion = generarRadiacion();
+            
+            // Envía el valor al sistema central
             pw.println(radiacion);
             pw.flush();
             try {

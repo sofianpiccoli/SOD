@@ -23,6 +23,7 @@ public class HiloTemperatura extends Thread{
     public HiloTemperatura(Socket ct){
         clienteTemperatura = ct;
         try {
+            // Lee datos enviados por el sensor de temperatura
             br = new BufferedReader(new InputStreamReader(clienteTemperatura.getInputStream()));
         } catch (IOException ex) {
             System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -46,6 +47,7 @@ public class HiloTemperatura extends Thread{
     public void run(){
         while (true){
             try {
+                // Lee y guarda la última temperatura recibida
                 String entrada = br.readLine();
                 setTemperatura(Double.parseDouble(entrada));
                 System.out.println("Temperatura = "+getTemperatura());

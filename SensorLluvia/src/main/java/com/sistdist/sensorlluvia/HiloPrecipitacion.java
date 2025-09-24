@@ -14,9 +14,9 @@ import java.net.Socket;
 public class HiloPrecipitacion extends Thread {
     
     private boolean on;
-    private boolean lluvia;
-    Socket cnxServidor;
-    PrintWriter pw;
+    private boolean lluvia; // Última lectura (true = llueve, false = no llueve)
+    Socket cnxServidor; // Conexión al sistema central
+    PrintWriter pw;  // Canal de salida
     
     public HiloPrecipitacion(Socket s, PrintWriter imp){
         on = false;
@@ -32,9 +32,10 @@ public class HiloPrecipitacion extends Thread {
         on = false;
     }
     
+    // Genera lluvia con probabilidad del 30%
     public boolean generarLluvia(){
         boolean L = false;
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.3) { // 30% de chance de que "llueva"
             L = true;
         }
         return L; 
@@ -43,7 +44,10 @@ public class HiloPrecipitacion extends Thread {
     public void run(){
         on=true;
         while (on){
+            // Genera nueva lectura
             lluvia = generarLluvia();
+            
+            // Envía el valor al sistema central
             pw.println(lluvia);
             pw.flush();
             try {

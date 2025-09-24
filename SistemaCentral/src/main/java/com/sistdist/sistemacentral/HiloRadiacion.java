@@ -11,7 +11,7 @@ import java.net.Socket;
 
 /**
  *
- * @author lucianafigue
+ * @author lucianafigueroa
  */
 public class HiloRadiacion extends Thread{
     private boolean on;
@@ -23,6 +23,7 @@ public class HiloRadiacion extends Thread{
     public HiloRadiacion(Socket cr){
         clienteRadiacion = cr;
         try {
+            // Conexión al sensor de radiación 
             br = new BufferedReader(new InputStreamReader(clienteRadiacion.getInputStream()));
         } catch (IOException ex) {
             System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -53,6 +54,7 @@ public class HiloRadiacion extends Thread{
     public void run(){
         while (true){
             try {
+                // Lee e imprime la radiación recibida
                 String entrada = br.readLine();
                 setRadiacion(Double.parseDouble(entrada));
                 System.out.println("Radiacion = "+getRadiacion());

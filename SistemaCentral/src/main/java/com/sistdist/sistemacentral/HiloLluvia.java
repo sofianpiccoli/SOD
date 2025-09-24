@@ -23,6 +23,7 @@ public class HiloLluvia extends Thread{
     public HiloLluvia(Socket cl){
         clienteLluvia = cl;
         try {
+            // Conexión al sensor de lluvia
             br = new BufferedReader(new InputStreamReader(clienteLluvia.getInputStream()));
         } catch (IOException ex) {
             System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -45,6 +46,7 @@ public class HiloLluvia extends Thread{
     public void run(){
         while (true){
             try {
+                // Recibe "true/false" si llueve
                 String entrada = br.readLine();
                 setLluvia(Boolean.parseBoolean(entrada));
                 System.out.println("Lluvia = "+getLluvia());
