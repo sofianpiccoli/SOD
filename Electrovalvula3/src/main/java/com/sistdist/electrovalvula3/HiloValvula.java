@@ -70,6 +70,7 @@ public class HiloValvula extends Thread{
     }
 
     private void detenerRiego() {
+        // Interrumpe el riego activo
         if (riegoActivo != null && riegoActivo.isAlive()) {
             riegoActivo.interrupt(); // interrumpe el sleep
         }
