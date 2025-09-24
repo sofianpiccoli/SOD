@@ -17,16 +17,17 @@ import java.util.logging.Logger;
 public class HiloSensado extends Thread {
     
     private boolean on;
-    private double humedad;
-    Socket cnxServidor;
-    PrintWriter pw;
+    private double humedad;   // Última lectura de humedad (%)
+    Socket cnxServidor;  // Conexión con el sistema central
+    PrintWriter pw;   // Canal de salida
     
     public HiloSensado(Socket s, PrintWriter imp){
         on = false;
-        cnxServidor = s;
-        pw = imp;
+        cnxServidor = s;  // Guarda la conexión al servidor
+        pw = imp;   // Guarda el canal de escritura
     }
     
+    // Genera un valor de humedad entre 0 y 100 % (redondeado)
     public double generarHumedad(){
         return (Math.round(Math.random() * 100));
     }
@@ -47,10 +48,10 @@ public class HiloSensado extends Thread {
         on = true;
         //Mide la humedad mientras esté prendido
         while(on){
-            humedad = generarHumedad();
+            humedad = generarHumedad();  // Calcula nueva humedad
             
             System.out.println(getHumedad());
-            //escribe en socket
+           // Envía el valor al sistema central
             pw.println(humedad);
             pw.flush();
             try {
