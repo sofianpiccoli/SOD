@@ -47,7 +47,7 @@ public class HiloLluvia extends Thread{
             try {
                 String entrada = br.readLine();
                 setLluvia(Boolean.parseBoolean(entrada));
-                System.out.println(getLluvia());
+                System.out.println("Lluvia = "+getLluvia());
             } catch (IOException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }

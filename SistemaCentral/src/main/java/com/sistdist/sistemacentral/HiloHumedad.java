@@ -84,7 +84,7 @@ public class HiloHumedad extends Thread{
             try {
                 String entrada = br.readLine();
                 setHumedad(Double.parseDouble(entrada));
-                System.out.println(getHumedad());
+                System.out.println("Humedad = "+getHumedad());
             } catch (IOException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }

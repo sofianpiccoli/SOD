@@ -11,6 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -24,9 +25,11 @@ public class SistemaCentral {
     private static final double W3 = 0.2;
 
     public static void main(String[] args) {
+        
+        
         String tipoDispositivo = " ";
-        Map<Integer, HiloHumedad> humedades = new HashMap<>();
-        Map<Integer, PrintWriter> valvulas = new HashMap<>();
+        Map<Integer, HiloHumedad> humedades = new ConcurrentHashMap<>();
+        Map<Integer, PrintWriter> valvulas = new ConcurrentHashMap<>();
         HiloLluvia lluvia = null;
         HiloRadiacion radiacion = null;
         HiloTemperatura temperatura = null;
@@ -119,21 +122,6 @@ public class SistemaCentral {
             System.getLogger(SistemaCentral.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
-        /*HiloDatosCompartidos datos = new HiloDatosCompartidos();
-        HiloHumedad hum = new HiloHumedad();
-        HiloRiego riego = new HiloRiego(0.5, 0.3, 0.2, datos, hum);
-        datos.start();
-        hum.start();
-        riego.start();
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException ex) {
-            System.getLogger(SistemaCentral.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        riego.apagar();
-        hum.apagar();
-        datos.apagar();
-         */
     }
 
     public static double calculoINR(double H, double T, double R) {

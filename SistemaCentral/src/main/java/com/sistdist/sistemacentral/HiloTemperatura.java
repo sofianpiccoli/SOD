@@ -48,7 +48,7 @@ public class HiloTemperatura extends Thread{
             try {
                 String entrada = br.readLine();
                 setTemperatura(Double.parseDouble(entrada));
-                System.out.println(getTemperatura());
+                System.out.println("Temperatura = "+getTemperatura());
             } catch (IOException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }

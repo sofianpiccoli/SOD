@@ -55,7 +55,7 @@ public class HiloRadiacion extends Thread{
             try {
                 String entrada = br.readLine();
                 setRadiacion(Double.parseDouble(entrada));
-                System.out.println(getRadiacion());
+                System.out.println("Radiacion = "+getRadiacion());
             } catch (IOException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }

@@ -19,6 +19,7 @@ public class HiloValvula extends Thread{
     private int parcela;
     private Socket socket;
     private BufferedReader br;
+    private Thread riegoActivo;
 
     public HiloValvula(Socket socket, int parcela) throws IOException {
         this.parcela = parcela;
@@ -31,13 +32,46 @@ public class HiloValvula extends Thread{
         try {
             while (true) {
                 String mensaje = br.readLine();  // espero una orden del sistema central
-                if (mensaje != null && mensaje.startsWith("TIEMPO=")) {
-                    int tiempo = Integer.parseInt(mensaje.split("=")[1]);
-                    activarValvula(tiempo);
+                if (mensaje != null) {
+                    if (mensaje.startsWith("TIEMPO=")) {
+                        int tiempo = Integer.parseInt(mensaje.split("=")[1]);
+                        iniciarRiego(tiempo);
+                    } else if (mensaje.equals("CERRAR")) {
+                        detenerRiego();
+                    }
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(HiloValvula.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void iniciarRiego(int minutos) {
+        // Si hay un riego activo, lo detengo antes de iniciar otro
+        if (riegoActivo != null && riegoActivo.isAlive()) {
+            detenerRiego();
+        }
+
+        riegoActivo = new Thread(() -> {
+            System.out.println("Electroválvula parcela " + parcela + 
+                               " regando durante " + minutos + " minutos...");
+            try {
+                for (int i = 0; i < minutos; i++) {
+                    Thread.sleep(1000); // 1 segundo = 1 minuto
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Electroválvula parcela " + parcela + " detenido por lluvia.");
+                return;
+            }
+            System.out.println("Electroválvula parcela " + parcela + " apagada.");
+        });
+
+        riegoActivo.start();
+    }
+
+    private void detenerRiego() {
+        if (riegoActivo != null && riegoActivo.isAlive()) {
+            riegoActivo.interrupt(); // interrumpe el sleep
         }
     }
 

@@ -34,18 +34,6 @@ public class HiloRiego extends Thread{
         this.valvulas = valvulas;
     }
 
-    
-    /*public HiloRiego(double w1, double w2, double w3, 
-                     HiloDatosCompartidos datos,
-                     Map<Integer, HiloHumedad> humedades) {
-        this.w1 = w1;
-        this.w2 = w2;
-        this.w3 = w3;
-        this.datos = datos;
-        this.humedades = humedades;
-        this.on = true;
-    }*/
-
     public HiloLluvia getLluvia() {
         return lluvia;
     }
@@ -70,97 +58,108 @@ public class HiloRiego extends Thread{
         this.temperatura = temperatura;
     }
     
-    
 
     public void setValvulas(Map<Integer, PrintWriter> valvulas) {
         this.valvulas = valvulas;
     }
     
-    
-    /*public double calculoINR(double H, double T, double R){
-        double inr = w1*(1-H/100) + w2*(T/40) + w3*(R/1000);
-        return inr;
-    }
-    
-    public boolean decidirRiego(boolean L, double INR){
-        return (INR > 0.7 && L == false);
-    }
-    
-    public int tiempoRiego(double inr){
-        int minutos;
-        if (inr >= 0.9) {
-            minutos = 10;
-        } else if (inr >= 0.8) {
-                minutos = 7;
-        } else {
-                minutos = 5;
-        }
-        return minutos;
-    }
-    
-    /*public void abrirValvula(int valvula, int tiempo){
-        System.out.println("Parcela "+valvula+" regándose por "+tiempo+" minutos");
-    }*/
-    
     public void apagar(){
         on = false;
     }
     
-    
     @Override
-    public void run() {
-        while (on) {
-            if (temperatura == null || radiacion == null || lluvia == null) {
+public void run() {
+    boolean lloviendo = false; // flag para no repetir la acción
+    
+    while (on) {
+        if (temperatura == null || radiacion == null || lluvia == null) {
             System.out.println("Esperando sensores...");
             try {
-                Thread.sleep(2000); // espero un poco y sigo chequeando
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            continue; // vuelve al inicio del while
-            }
-            
-            // Recorremos las parcelas con sensor de humedad
-            for (int parcela : humedades.keySet()) {
-                double H = humedades.get(parcela).getHumedad();
-                double T = temperatura.getTemperatura();
-                double R = radiacion.getRadiacion();
-                boolean L = lluvia.getLluvia();
-                double inr = SistemaCentral.calculoINR(H, T, R);
-                System.out.println("Parcela " + parcela + " -> INR = " + inr);
+            continue;
+        }
 
-                if (SistemaCentral.decidirRiego(L, inr) && valvulas.containsKey(parcela)) {
-                    int minutos = SistemaCentral.tiempoRiego(inr);
-                    abrirValvula(parcela, minutos);
+        boolean L = lluvia.getLluvia();
+
+        if (L) {
+            if (!lloviendo) { // solo ejecutar la primera vez que detecta lluvia
+                System.out.println("¡Está lloviendo! Cerrando todas las válvulas...");
+                for (int parcela : valvulas.keySet()) {
+                    abrirValvula(parcela, 0); // tiempo=0 para detener
                 }
+                lloviendo = true;
             }
-
-            try {
-                Thread.sleep(5000);// espera entre chequeos
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        } else {
+            lloviendo = false; // se resetea cuando deja de llover
         }
-    }
 
-    private void abrirValvula(int parcela, int tiempo) {
-        if (valvulas == null) return;
+        for (int parcela : humedades.keySet()) {
+            double H = humedades.get(parcela).getHumedad();
+            double T = temperatura.getTemperatura();
+            double R = radiacion.getRadiacion();
+            double inr = SistemaCentral.calculoINR(H, T, R);
+            System.out.println("Parcela " + parcela + " -> INR = " + inr);
 
-        // Espera hasta que la válvula se conecte
-        while (!valvulas.containsKey(parcela)) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (SistemaCentral.decidirRiego(L, inr) && valvulas.containsKey(parcela)) {
+                int minutos = SistemaCentral.tiempoRiego(inr);
+                abrirValvula(parcela, minutos);
             }
         }
 
-        PrintWriter pw = valvulas.get(parcela);
-        pw.println("TIEMPO=" + tiempo);
-        pw.flush();
-        System.out.println("Orden enviada -> Parcela " + parcela + " regando " + tiempo + " minutos");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
+
+    
+   
+
+    public void abrirValvula(int parcela, int tiempo) {
+        if (valvulas == null) return;
+
+        new Thread(() -> {
+            if (tiempo <= 0) {
+            cerrarValvula(parcela);
+            return;
+            }
+            System.out.println("Preparando orden -> Parcela " + parcela + " tiempo=" + tiempo);
+            // Espera no bloqueante del hilo principal: el hilo creado esperará a que se conecte la válvula
+            while (!valvulas.containsKey(parcela)) {
+                System.out.println("Esperando conexión de válvula " + parcela + "...");
+                try { Thread.sleep(500); } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+            PrintWriter pw = valvulas.get(parcela);
+            if (pw == null) {
+                System.out.println("La válvula " + parcela + " desapareció antes de enviar la orden.");
+                return;
+            }
+            pw.println("TIEMPO=" + tiempo);
+            pw.flush();
+            System.out.println("Orden enviada -> Parcela " + parcela + " regando " + tiempo + " minutos");
+        }).start();
+    }
+    
+    public void cerrarValvula(int parcela) {
+        if (valvulas == null || !valvulas.containsKey(parcela)) return;
+
+        PrintWriter pw = valvulas.get(parcela);
+        pw.println("CERRAR");
+        pw.flush();
+        System.out.println("Orden enviada -> Parcela " + parcela + " detener riego por lluvia");
+}
+
+
+}
+
     //public void run(){
         /*on = true;
         while (on){

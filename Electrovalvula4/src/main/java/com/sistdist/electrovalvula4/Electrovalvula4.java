@@ -24,7 +24,7 @@ public class Electrovalvula4 {
 
             // Me identifico con el sistema central
             PrintWriter pw = new PrintWriter(cliente.getOutputStream(), true);
-            pw.println("HelectroValvula4"); 
+            pw.println("electroValvula4"); 
             pw.flush();
 
             // Arranco el hilo que escucha órdenes
