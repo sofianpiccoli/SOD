@@ -52,6 +52,7 @@ public class HiloValvula extends Thread{
             detenerRiego();
         }
 
+        // Simula que la válvula está regando
         riegoActivo = new Thread(() -> {
             System.out.println("Electroválvula parcela " + parcela + 
                                " regando durante " + minutos + " minutos...");
@@ -70,8 +71,9 @@ public class HiloValvula extends Thread{
     }
 
     private void detenerRiego() {
+        // Interrumpe el riego activo
         if (riegoActivo != null && riegoActivo.isAlive()) {
-            riegoActivo.interrupt(); // interrumpe el sleep
+            riegoActivo.interrupt();  // interrumpe el sleep
         }
     }
 
