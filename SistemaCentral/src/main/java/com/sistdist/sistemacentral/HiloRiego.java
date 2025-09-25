@@ -88,7 +88,7 @@ public void run() {
         // Si llueve → cerrar todas las válvulas
         if (L) {
             if (!lloviendo) { // solo ejecutar la primera vez que detecta lluvia
-                System.out.println("¡Está lloviendo! Cerrando todas las válvulas...");
+                System.out.println("¡Esta lloviendo! Cerrando todas las valvulas...");
                 for (int parcela : valvulas.keySet()) {
                     abrirValvula(parcela, 0); // tiempo=0 para detener
                 }
@@ -137,7 +137,7 @@ public void run() {
             System.out.println("Preparando orden -> Parcela " + parcela + " tiempo=" + tiempo);
             // Espera no bloqueante del hilo principal: el hilo creado esperará a que se conecte la válvula
             while (!valvulas.containsKey(parcela)) {
-                System.out.println("Esperando conexión de válvula " + parcela + "...");
+                System.out.println("Esperando conexion de valvula " + parcela + "...");
                 try { Thread.sleep(500); } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
@@ -146,7 +146,7 @@ public void run() {
             // Envía orden a la electroválvula correspondiente
             PrintWriter pw = valvulas.get(parcela);
             if (pw == null) {
-                System.out.println("La válvula " + parcela + " desapareció antes de enviar la orden.");
+                System.out.println("La valvula " + parcela + " desaparecio antes de enviar la orden.");
                 return;
             }
             pw.println("TIEMPO=" + tiempo);
@@ -167,35 +167,4 @@ public void run() {
 
 
 }
-
-    //public void run(){
-        /*on = true;
-        while (on){
-            for (int i = 1; i <=5; i++){
-                try {
-                    double H = switch (i){
-                        case 1 -> hum.getH1();
-                        case 2 -> hum.getH2();
-                        case 3 -> hum.getH3();
-                        case 4 -> hum.getH4();
-                        case 5 -> hum.getH5();
-                        default -> 0;
-                    };
-                    double inr = calculoINR(H, datos.getTemperatura(), datos.getRadiacion());
-                    System.out.println("INR"+i+" = "+inr);
-                    if (decidirRiego(datos.isLluvia(), inr)){
-                        abrirValvula(i, tiempoRiego(inr));
-                    }
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    System.getLogger(HiloRiego.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                }
-            }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-                System.getLogger(HiloRiego.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-        }*/
-   // }
 

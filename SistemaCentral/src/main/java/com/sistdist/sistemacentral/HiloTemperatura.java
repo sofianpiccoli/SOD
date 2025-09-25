@@ -54,13 +54,6 @@ public class HiloTemperatura extends Thread{
             } catch (IOException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
-          
-            /*try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-                System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }*/
-            
         }
     }
 

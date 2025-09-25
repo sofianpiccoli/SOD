@@ -27,8 +27,10 @@ public class SistemaCentral {
     public static void main(String[] args) {
         
         // Mapas concurrentes para manejar datos en paralelo
-        Map<Integer, HiloHumedad> humedades = new ConcurrentHashMap<>();
-        Map<Integer, PrintWriter> valvulas = new ConcurrentHashMap<>();
+        // Guarda los sensores de humedad por parcela 
+        Map<Integer, HiloHumedad> humedades = new ConcurrentHashMap<>(); 
+        // Guarda las conexiones a las electrovalvulas por parcela
+        Map<Integer, PrintWriter> valvulas = new ConcurrentHashMap<>(); 
         
         String tipoDispositivo = " ";
         
@@ -58,7 +60,8 @@ public class SistemaCentral {
                         System.out.println("soy el sensor de humedad 1");
                         HiloHumedad hum1 = new HiloHumedad(s);
                         hum1.start();
-                        humedades.put(1, hum1);
+                        // Se almacena el sensor de la parcela 1
+                        humedades.put(1, hum1); 
                         break;
                     case "sensorHumedad2":
                         System.out.println("soy el sensor de humedad 2");
@@ -102,6 +105,7 @@ public class SistemaCentral {
                     case "electroValvula1":
                         System.out.println("soy la electrovalvula 1");
                         PrintWriter pw1 = new PrintWriter(s.getOutputStream(), true);
+                        // Almacena la conexión de la válvula 1
                         valvulas.put(1, pw1);
                         break;
                     case "electroValvula2":

@@ -31,7 +31,7 @@ public class HiloSensado extends Thread{
         on = false;
     }
     
-     // Genera un valor de radiación aleatorio entre 0 y 1000
+    // Genera un valor de radiación aleatorio entre 0 y 1000
     public double generarRadiacion(){
         return (Math.random() * 1000);
     }
