@@ -3,21 +3,83 @@
  */
 
 package com.mycompany.sistemafertirrigacion;
+import interfaces.*;
+import java.io.*;
+import java.net.*;
+import java.rmi.Naming;
+import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
+
+public class SistemaFertirrigacion {
+
+    public static void main(String[] args) {
+        Map<Integer, PrintWriter> valvulasFert = new HashMap<>();
+
+        try {
+            IServidorExclusion servidorExclusion =(IServidorExclusion) Naming.lookup("rmi://localhost:1100/ServidorExclusionMutua");
+            HiloFertirrigacion ferti = new HiloFertirrigacion(valvulasFert) {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            // Intentamos usar la bomba para fertirrigación
+                            boolean acceso = servidorExclusion.requestAccess("Fertirrigacion");
+                            if (acceso) {
+                                System.out.println("[Fertirrigacion] Acceso concedido a la bomba. Fertirrigación en ejecución...");
+                                Thread.sleep(5000); // simulación de tiempo de fertirrigación
+                                System.out.println("[Fertirrigacion] Fertirrigación finalizada. Liberando bomba...");
+                                servidorExclusion.releaseAccess("Fertirrigacion");
+                            } else {
+                                System.out.println("[Fertirrigacion] Bomba ocupada. Reintentando en 3s...");
+                                Thread.sleep(3000);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+
+            ferti.start();
+
+            // Servidor para recibir conexiones de válvulas
+            try (ServerSocket server = new ServerSocket(21000)) {
+                while (true) {
+                    Socket s = server.accept();
+                    BufferedReader bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                    String tipoDispositivo = bf.readLine();
+                    if ("valvulaFert".equals(tipoDispositivo)) {
+                        PrintWriter pw = new PrintWriter(s.getOutputStream(), true);
+                        valvulasFert.put(1, pw);
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  *
  * @author lucianafigue
  */
-public class SistemaFertirrigacion {
+/*public class SistemaFertirrigacion {
 
     public static void main(String[] args) {
         Map<Integer, PrintWriter> valvulasFert = new HashMap<>();
@@ -43,4 +105,4 @@ public class SistemaFertirrigacion {
                   .log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-}
+}*/
