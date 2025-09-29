@@ -1,0 +1,6 @@
+com/sistdist/sistemacentral/HiloRadiacion.class
+com/sistdist/sistemacentral/HiloTemperatura.class
+com/sistdist/sistemacentral/HiloHumedad.class
+com/sistdist/sistemacentral/SistemaCentral.class
+com/sistdist/sistemacentral/HiloLluvia.class
+com/sistdist/sistemacentral/HiloRiego.class
