@@ -68,61 +68,61 @@ public class HiloRiego extends Thread{
     }
     
     @Override
-public void run() {
-    boolean lloviendo = false; // flag para no repetir la acción
-    
-    while (on) {
-        // Espera hasta que todos los sensores estén conectados
-        if (temperatura == null || radiacion == null || lluvia == null) {
-            System.out.println("Esperando sensores...");
+    public void run() {
+        boolean lloviendo = false; // flag para no repetir la acción
+
+        while (on) {
+            // Espera hasta que todos los sensores estén conectados
+            if (temperatura == null || radiacion == null || lluvia == null) {
+                System.out.println("Esperando sensores...");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+
+            boolean L = lluvia.getLluvia();
+
+            // Si llueve → cerrar todas las válvulas
+            if (L) {
+                if (!lloviendo) { // solo ejecutar la primera vez que detecta lluvia
+                    System.out.println("¡Esta lloviendo! Cerrando todas las valvulas...");
+                    for (int parcela : valvulas.keySet()) {
+                        abrirValvula(parcela, 0); // tiempo=0 para detener
+                    }
+                    lloviendo = true;
+                }
+            } else {
+                lloviendo = false; // se resetea cuando deja de llover
+            }
+
+            // Por cada parcela con sensor de humedad
+            if (!L) {
+                for (int parcela : humedades.keySet()) {
+                    double H = humedades.get(parcela).getHumedad();
+                    double T = temperatura.getTemperatura();
+                    double R = radiacion.getRadiacion();
+
+                    // Cálculo del INR
+                    double inr = SistemaCentral.calculoINR(H, T, R);
+                    System.out.println("Parcela " + parcela + " -> INR = " + inr);
+
+                    // Si es necesario regar → abrir válvula
+                    if ((inr > 0.7) && valvulas.containsKey(parcela)) {
+                        int minutos = SistemaCentral.tiempoRiego(inr);
+                        abrirValvula(parcela, minutos);
+                    }
+                }
+            }
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            continue;
-        }
-
-        boolean L = lluvia.getLluvia();
-
-        // Si llueve → cerrar todas las válvulas
-        if (L) {
-            if (!lloviendo) { // solo ejecutar la primera vez que detecta lluvia
-                System.out.println("¡Esta lloviendo! Cerrando todas las valvulas...");
-                for (int parcela : valvulas.keySet()) {
-                    abrirValvula(parcela, 0); // tiempo=0 para detener
-                }
-                lloviendo = true;
-            }
-        } else {
-            lloviendo = false; // se resetea cuando deja de llover
-        }
-
-        // Por cada parcela con sensor de humedad
-        if (!L) {
-            for (int parcela : humedades.keySet()) {
-            double H = humedades.get(parcela).getHumedad();
-            double T = temperatura.getTemperatura();
-            double R = radiacion.getRadiacion();
-            
-            // Cálculo del INR
-            double inr = SistemaCentral.calculoINR(H, T, R);
-            System.out.println("Parcela " + parcela + " -> INR = " + inr);
-
-            // Si es necesario regar → abrir válvula
-            if ((inr > 0.7) && valvulas.containsKey(parcela)) {
-                int minutos = SistemaCentral.tiempoRiego(inr);
-                abrirValvula(parcela, minutos);
-            }
-        }
-        }
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
-}
 
     
    
