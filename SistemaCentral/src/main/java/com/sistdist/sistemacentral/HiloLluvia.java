@@ -46,7 +46,7 @@ public class HiloLluvia extends Thread{
     public void run(){
         while (true){
             try {
-                // Recibe "true/false" si llueve
+                // Lee mensajes del sensor de lluvia, que son "true" o "false" y los imprime
                 String entrada = br.readLine();
                 setLluvia(Boolean.parseBoolean(entrada));
                 System.out.println("Lluvia = "+getLluvia());

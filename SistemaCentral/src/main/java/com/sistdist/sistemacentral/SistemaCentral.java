@@ -60,7 +60,7 @@ public class SistemaCentral {
                         System.out.println("soy el sensor de humedad 1");
                         HiloHumedad hum1 = new HiloHumedad(s);
                         hum1.start();
-                        // Se almacena el sensor de la parcela 1
+                        //El sensor de humedad de la parcela 1 está representado por el hilo hum1
                         humedades.put(1, hum1); 
                         break;
                     case "sensorHumedad2":

@@ -54,26 +54,13 @@ public class HiloRadiacion extends Thread{
     public void run(){
         while (true){
             try {
-                // Lee e imprime la radiación recibida
+                //Lee datos del sensor de radiación que llegan por el BufferedReader br y los imprime
                 String entrada = br.readLine();
                 setRadiacion(Double.parseDouble(entrada));
                 System.out.println("Radiacion = "+getRadiacion());
             } catch (IOException ex) {
                 System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-            /*por ahora genera aleatoriamente los valores 
-            //hasta que pueda obtener datos del sensor
-            h1= generarValorAleatorio();
-            h2= generarValorAleatorio();
-            h3= generarValorAleatorio();
-            h4= generarValorAleatorio();
-            h5= generarValorAleatorio(); */
-            /*try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-                System.getLogger(HiloHumedad.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }*/
-            
+            }    
         }
     }
 }

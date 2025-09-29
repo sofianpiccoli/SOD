@@ -53,8 +53,8 @@ public class HiloSensado extends Thread {
             
             System.out.println(getHumedad());
             // Envía el valor al sistema central
-            pw.println(humedad);
-            pw.flush();
+            pw.println(humedad);  
+            pw.flush(); // Asegura que el dato salga inmediatamente
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {
