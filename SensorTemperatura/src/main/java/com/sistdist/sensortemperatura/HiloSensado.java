@@ -5,8 +5,9 @@
 package com.sistdist.sensortemperatura;
 
 import java.io.PrintWriter;
-import java.lang.Math.*;
 import java.net.Socket;
+import java.util.Random;
+
 
 /**
  *
@@ -14,9 +15,10 @@ import java.net.Socket;
  */
 public class HiloSensado extends Thread{
     private boolean on; // Indica si el sensor está encendido
-    private double temperatura; // Última lectura de temperatura
+    private double temperatura = 25.0; // Última lectura de temperatura
     Socket cnxServidor; // Conexión al sistema central
     PrintWriter pw; // Canal de salida para enviar datos
+    private Random rand = new Random();
     
     public HiloSensado(Socket s, PrintWriter imp){
         on = false; // Inicialmente apagado
@@ -32,15 +34,29 @@ public class HiloSensado extends Thread{
         on = false;
     }
     
+    // Genera la próxima temperatura a enviar con Distribución Normal
+    public double generarTemperatura() {
+        double media = 25;     // Temperatura promedio
+        double desviacion = 5; // Qué tan dispersos son los valores
+
+        double t = media + rand.nextGaussian() * desviacion;
+
+        // Limitar valores extremos
+        if (t < 15) t = 15;
+        if (t > 40) t = 40;
+
+        return t;
+    }
+    
     // Genera la próxima temperatura a enviar, con una pequeña variación aleatoria
-    public double generarTemperatura(){
+    /*public double generarTemperatura(){
         double cambio = (Math.random()*2 - 1); // Variación entre -1 y +1
         double t = temperatura + cambio; // Se suma al valor actual
         if (t > 40){ // Límite máximo = 40°C
             t = 40;
         }
         return t;
-    }
+    }*/
     
     public double getTemperatura(){
         return temperatura;  // Devuelve el valor actual
@@ -48,7 +64,6 @@ public class HiloSensado extends Thread{
     
     public void run(){
         on = true;
-        temperatura=29; // Temperatura inicial
         while (on){
             // Genera un nuevo valor de temperatura
             temperatura = generarTemperatura();
