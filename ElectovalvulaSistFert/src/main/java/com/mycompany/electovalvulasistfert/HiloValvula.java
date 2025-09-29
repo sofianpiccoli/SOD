@@ -4,35 +4,48 @@
  */
 package com.mycompany.electovalvulasistfert;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 /**
  *
  * @author sofianietopiccoli
  */
-public class HiloValvula extends Thread{
-    private boolean on;
-    
-    public HiloValvula(){
+public class HiloValvula extends Thread {
+
+    private boolean on = true;
+    private BufferedReader br;
+
+    public HiloValvula(BufferedReader br) {
+        this.br = br;
+    }
+
+    public void apagar() {
         on = false;
+        System.out.println("Electrovalvula Fertirrigacion INACTIVA");
     }
-    
-    public void encender(){
-        on = true;
-        System.out.println("Electroválvula de Sistema de Fertirrigacion ACTIVA");
-    }
-    
-    public void apagar(){
-        on = false;
-        System.out.println("Electroválvula de Sistema de Fertirrigacion INACTIVA");
-    }
-    
-    public void run(){
-        on = true;
-        while (on){
-            System.out.println("Electroválvula de Sistema de Fertirrigacion ACTIVA");
+
+    @Override
+    public void run() {
+        System.out.println("Electrovalvula Fertirrigacion esperando ordenes...");
+        while (on) {
             try {
-            Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-                System.getLogger(HiloValvula.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                String orden = br.readLine();
+                if (orden == null) {
+                    break;
+                }
+
+                switch (orden) {
+                    case "ABRIR":
+                        System.out.println("\nElectrovalvula Fertirrigacion ACTIVA (abierta)");
+                        break;
+                    case "CERRAR":
+                        System.out.println("Electrovalvula Fertirrigacion INACTIVA (cerrada)");
+                        break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                break;
             }
         }
     }

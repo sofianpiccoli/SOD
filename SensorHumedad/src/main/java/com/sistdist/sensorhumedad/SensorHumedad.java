@@ -23,16 +23,20 @@ public class SensorHumedad {
         InetAddress IPServidor;
         PrintWriter pw;
         try {
-            // Se conecta al sistema central e informa su ID (ej: sensorHumedad1)
+            // Se conecta al Sistema Central en la dirección localhost y puerto 20000
             IPServidor = InetAddress.getByName("127.0.0.1"); //localhost
             Socket cliente = new Socket(IPServidor, 20000);
             
-            // Me identifico con el sistema central
+            // Se prepara un canal de escritura hacia el Sistema Central
             pw = new PrintWriter(cliente.getOutputStream());
+            
+            // Se envía la identificación del sensor (ej: "sensorHumedad1")
             pw.println("sensorHumedad1");
+            
+            // flush fuerza el envío inmediato del mensaje (evita que quede en el buffer)
             pw.flush();
             
-            // Inicia el hilo que escucha órdenes del sistema central
+            // Inicia el hilo que genera y envía datos simulados del sensor al Sistema Central
             HiloSensado sensor = new HiloSensado(cliente, pw);
             sensor.start();
         } catch (UnknownHostException ex) {

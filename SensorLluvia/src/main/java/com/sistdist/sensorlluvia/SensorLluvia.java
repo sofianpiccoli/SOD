@@ -22,16 +22,20 @@ public class SensorLluvia {
         InetAddress IPServidor;
         PrintWriter pw;
         try {
-            // Conexión al sistema central en localhost:20000
+            // Se conecta al Sistema Central en la dirección localhost y puerto 20000
             IPServidor = InetAddress.getByName("127.0.0.1"); //localhost
             Socket cliente = new Socket(IPServidor, 20000);
             
-            // Se identifica como sensor de lluvia
+            // Se prepara un canal de escritura hacia el Sistema Central
             pw = new PrintWriter(cliente.getOutputStream());
+            
+            // Se envía la identificación del sensor (ej: "sensorLluvia")
             pw.println("sensorLluvia");
+            
+            // flush fuerza el envío inmediato del mensaje (evita que quede en el buffer)
             pw.flush();
             
-            // Lanza el hilo de precipitación
+            // Inicia el hilo que genera y envía datos simulados del sensor al Sistema Central
             HiloPrecipitacion sensor = new HiloPrecipitacion(cliente, pw);
             sensor.start();
         } catch (UnknownHostException ex) {

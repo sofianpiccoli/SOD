@@ -23,16 +23,20 @@ public class SensorTemperatura {
         InetAddress IPServidor;
         PrintWriter pw;
         try {
-            // Conecta al sistema central en localhost:20000
+            // Se conecta al Sistema Central en la dirección localhost y puerto 20000
             IPServidor = InetAddress.getByName("127.0.0.1"); //localhost
             Socket cliente = new Socket(IPServidor, 20000);
             
-            // Se identifica como sensor de temperatura
+            // Se prepara un canal de escritura hacia el Sistema Central
             pw = new PrintWriter(cliente.getOutputStream());
+            
+             // Se envía la identificación del sensor (ej: "sensorTemperatura")
             pw.println("sensorTemperatura");
+            
+            // flush fuerza el envío inmediato del mensaje (evita que quede en el buffer)
             pw.flush();
             
-            // Crea un hilo que simula las lecturas y envía datos al sistema central
+            // Inicia el hilo que genera y envía datos simulados del sensor al Sistema Central
             HiloSensado sensorT = new HiloSensado(cliente, pw);
             sensorT.start();
         } catch (UnknownHostException ex) {

@@ -99,7 +99,7 @@ public class SistemaCentral {
                         break;
                     case "electroValvula1":
                         PrintWriter pw1 = new PrintWriter(s.getOutputStream(), true);
-                        // Almacena la conexión de la válvula 1
+                        // Asocia la parcela 1 con el canal de comunicación (PrintWriter) hacia su electroválvula
                         valvulas.put(1, pw1);
                         break;
                     case "electroValvula2":
