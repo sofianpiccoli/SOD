@@ -57,32 +57,27 @@ public class SistemaCentral {
                 // Dependiendo del tipo de dispositivo conectado, se crea un hilo
                 switch (tipoDispositivo) {
                     case "sensorHumedad1":
-                        System.out.println("soy el sensor de humedad 1");
                         HiloHumedad hum1 = new HiloHumedad(s);
                         hum1.start();
                         // Se almacena el sensor de la parcela 1
                         humedades.put(1, hum1); 
                         break;
                     case "sensorHumedad2":
-                        System.out.println("soy el sensor de humedad 2");
                         HiloHumedad hum2 = new HiloHumedad(s);
                         hum2.start();
                         humedades.put(2, hum2);
                         break;
                     case "sensorHumedad3":
-                        System.out.println("soy el sensor de humedad 3");
                         HiloHumedad hum3 = new HiloHumedad(s);
                         hum3.start();
                         humedades.put(3, hum3);
                         break;
                     case "sensorHumedad4":
-                        System.out.println("soy el sensor de humedad 4");
                         HiloHumedad hum4 = new HiloHumedad(s);
                         hum4.start();
                         humedades.put(4, hum4);
                         break;
                     case "sensorHumedad5":
-                        System.out.println("soy el sensor de humedad 5");
                         HiloHumedad hum5 = new HiloHumedad(s);
                         hum5.start();
                         humedades.put(5, hum5);
@@ -103,28 +98,23 @@ public class SistemaCentral {
                         riego.setRadiacion(rad);
                         break;
                     case "electroValvula1":
-                        System.out.println("soy la electrovalvula 1");
                         PrintWriter pw1 = new PrintWriter(s.getOutputStream(), true);
                         // Almacena la conexión de la válvula 1
                         valvulas.put(1, pw1);
                         break;
                     case "electroValvula2":
-                        System.out.println("soy la electrovalvula 2");
                         PrintWriter pw2 = new PrintWriter(s.getOutputStream(), true);
                         valvulas.put(2, pw2);
                         break;
                     case "electroValvula3":
-                        System.out.println("soy la electrovalvula 3");
                         PrintWriter pw3 = new PrintWriter(s.getOutputStream(), true);
                         valvulas.put(3, pw3);
                         break;
                     case "electroValvula4":
-                        System.out.println("soy la electrovalvula 4");
                         PrintWriter pw4 = new PrintWriter(s.getOutputStream(), true);
                         valvulas.put(4, pw4);
                         break;
                     case "electroValvula5":
-                        System.out.println("soy la electrovalvula 5");
                         PrintWriter pw5 = new PrintWriter(s.getOutputStream(), true);
                         valvulas.put(5, pw5);
                         break;
@@ -142,10 +132,6 @@ public class SistemaCentral {
         return W1 * (1 - H / 100) + W2 * (T / 40) + W3 * (R / 1000);
     }
 
-    // Decide si se riega o no (según INR y lluvia)
-    public static boolean decidirRiego(boolean L, double INR) {
-        return (INR > 0.7 && !L);
-    }
 
     // Determina cuánto tiempo regar (dependiendo del INR)
     public static int tiempoRiego(double inr) {

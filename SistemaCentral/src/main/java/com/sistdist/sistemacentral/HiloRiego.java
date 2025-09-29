@@ -99,7 +99,8 @@ public void run() {
         }
 
         // Por cada parcela con sensor de humedad
-        for (int parcela : humedades.keySet()) {
+        if (!L) {
+            for (int parcela : humedades.keySet()) {
             double H = humedades.get(parcela).getHumedad();
             double T = temperatura.getTemperatura();
             double R = radiacion.getRadiacion();
@@ -109,12 +110,12 @@ public void run() {
             System.out.println("Parcela " + parcela + " -> INR = " + inr);
 
             // Si es necesario regar → abrir válvula
-            if (SistemaCentral.decidirRiego(L, inr) && valvulas.containsKey(parcela)) {
+            if ((inr > 0.7) && valvulas.containsKey(parcela)) {
                 int minutos = SistemaCentral.tiempoRiego(inr);
                 abrirValvula(parcela, minutos);
             }
         }
-
+        }
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -134,7 +135,6 @@ public void run() {
             cerrarValvula(parcela);
             return;
             }
-            System.out.println("Preparando orden -> Parcela " + parcela + " tiempo=" + tiempo);
             // Espera no bloqueante del hilo principal: el hilo creado esperará a que se conecte la válvula
             while (!valvulas.containsKey(parcela)) {
                 System.out.println("Esperando conexion de valvula " + parcela + "...");
