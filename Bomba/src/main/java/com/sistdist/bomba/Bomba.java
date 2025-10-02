@@ -8,19 +8,17 @@ package com.sistdist.bomba;
  *
  * @author miria
  */
-public class Bomba {
+import interfacesRMI.IExclusion;
+import java.rmi.Naming;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        MonitorBomba bom = new MonitorBomba();
-        HiloFerti ferti=new HiloFerti(bom);
-        HiloRi ri=new HiloRi(bom);
-        
-        
-        ferti.start();
-        ri.start();
-        
+public class MainBomba {
+    public static void main(String[] args) {
+        try {
+            IExclusion servidor = (IExclusion) Naming.lookup("//localhost/ServidorExclusionMutua");
+            HiloRi hiloRiego = new HiloRi(servidor);
+            hiloRiego.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

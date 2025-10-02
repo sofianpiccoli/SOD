@@ -8,7 +8,37 @@ package com.sistdist.bomba;
  *
  * @author miria
  */
-public class HiloRi extends Thread{
+import interfacesRMI.IExclusion;
+import java.rmi.Naming;
+
+public class HiloRi extends Thread {
+
+    private IExclusion servidor;
+
+    public HiloRi(IExclusion servidor) {
+        this.servidor = servidor;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                servidor.pedirBomba("Riego");
+                System.out.println("Usando bomba para riego...");
+                Thread.sleep(2000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    servidor.liberarBomba("Riego");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+/*public class HiloRi extends Thread{
 
     MonitorBomba b=new MonitorBomba();
     public HiloRi(MonitorBomba bo){
@@ -30,3 +60,4 @@ public class HiloRi extends Thread{
         }
     }
 }
+*/
