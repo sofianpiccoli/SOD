@@ -60,6 +60,7 @@ public class SistemaCentral {
                         HiloHumedad hum1 = new HiloHumedad(s);
                         hum1.start();
                         //El sensor de humedad de la parcela 1 está representado por el hilo hum1
+                        // Se guarda en el mapa humedades para que HiloRiego pueda acceder a sus datos
                         humedades.put(1, hum1); 
                         break;
                     case "sensorHumedad2":
