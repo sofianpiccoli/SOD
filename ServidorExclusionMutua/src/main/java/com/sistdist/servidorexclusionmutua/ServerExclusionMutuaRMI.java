@@ -8,12 +8,13 @@ import java.rmi.server.UnicastRemoteObject;
  * @author lucianafigueroa
  */
 public class ServerExclusionMutuaRMI extends UnicastRemoteObject implements IServicioExclusionMutua {
+    //los estados segun quien este usando la bomba
     private static final int ESTADO_LIBRE = 0;
     private static final int ESTADO_RIEGO = 1;
     private static final int ESTADO_FERTIRRIGACION = 2;
 
-    private int parcelasRegandoCount = 0;
-    private final Object BOMBA_LOCK = new Object();
+    private int parcelasRegandoCount = 0; //contador de parcelas regando
+    private final Object BOMBA_LOCK = new Object(); //objeto bloqueante
     private int bombaEnUso = ESTADO_LIBRE;
 
     public ServerExclusionMutuaRMI() throws RemoteException {
@@ -30,7 +31,7 @@ public class ServerExclusionMutuaRMI extends UnicastRemoteObject implements ISer
     public void solicitarBombaRiego(int idParcela) throws RemoteException, InterruptedException {
         synchronized (BOMBA_LOCK) {
             while (bombaEnUso == ESTADO_FERTIRRIGACION) {
-                System.out.println("⏳ [Riego Parcela " + idParcela + "] Espera. Bomba ocupada por FERTIRRIGACION.");
+                System.out.println("⏳ [El riego de la parcela " + idParcela + "] Espera. Bomba ocupada por FERTIRRIGACION.");
                 BOMBA_LOCK.wait();
             }
             if (bombaEnUso == ESTADO_LIBRE) {

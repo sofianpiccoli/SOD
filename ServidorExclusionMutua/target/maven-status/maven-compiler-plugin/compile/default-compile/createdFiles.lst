@@ -1,1 +1,3 @@
 com\sistdist\servidorexclusionmutua\ServidorExclusionMutua.class
+com\sistdist\interfaces\IServicioExclusionMutua.class
+com\sistdist\servidorexclusionmutua\ServerExclusionMutuaRMI.class

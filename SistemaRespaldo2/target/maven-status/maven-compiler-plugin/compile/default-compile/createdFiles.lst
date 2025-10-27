@@ -1,0 +1,11 @@
+com\sistdist\sistemarespaldo2\HiloRadiacion.class
+com\sistdist\sistemarespaldo2\HiloTemperatura.class
+com\sistdist\sistemarespaldo2\HiloLluvia.class
+com\sistdist\sistemarespaldo2\HiloHumedad.class
+com\sistdist\sistemarespaldo2\SistemaRespaldo2$1.class
+com\sistdist\sistemarespaldo2\SistemaRespaldo2.class
+com\sistdist\interfaces\IEleccionAnillo.class
+com\sistdist\interfaces\IServicioExclusionMutua.class
+com\sistdist\sistemarespaldo2\HiloParcela.class
+com\sistdist\interfaces\IDetectorFalla.class
+com\sistdist\sistemarespaldo2\HiloFertirrigacion.class

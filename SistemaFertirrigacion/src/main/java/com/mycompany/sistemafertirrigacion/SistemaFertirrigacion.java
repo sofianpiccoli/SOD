@@ -10,7 +10,7 @@ import java.net.Socket;
  *
  * @author dgera
  */
-
+//pasa a ser un cliente del sistema central.
 public class SistemaFertirrigacion {
 
     public static void main(String[] args) {
