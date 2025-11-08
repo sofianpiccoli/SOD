@@ -10,7 +10,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 /**
- * @author mirian
+ * @author miria
  */
 public class SensorTemperatura {
     private static Boolean conectado = false;

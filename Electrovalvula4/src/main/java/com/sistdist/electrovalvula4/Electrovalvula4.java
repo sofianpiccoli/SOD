@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author mirian
+ * @author miria
  */
 public class Electrovalvula4 {
 

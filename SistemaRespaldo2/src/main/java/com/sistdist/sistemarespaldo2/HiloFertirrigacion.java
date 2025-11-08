@@ -3,12 +3,10 @@ package com.sistdist.sistemarespaldo2;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-
 /**
  *
  * @author dgera
  */
-
 public class HiloFertirrigacion extends Thread {
     private static Boolean on = true;
 

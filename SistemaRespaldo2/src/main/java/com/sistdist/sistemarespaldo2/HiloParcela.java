@@ -6,7 +6,6 @@ import java.io.PrintWriter;
  *
  * @author dgera
  */
-
 public class HiloParcela extends Thread {
     private final int idParcela;
     private final HiloLluvia lluvia;

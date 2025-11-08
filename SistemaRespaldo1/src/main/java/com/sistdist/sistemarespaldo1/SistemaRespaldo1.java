@@ -18,12 +18,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
 /**
  *
  * @author dgera
  */
-//este servidor de resplado limpia todo y arranca todo de vuelta
+
 public class SistemaRespaldo1 extends UnicastRemoteObject implements IDetectorFalla, IEleccionAnillo {
 
     private static final int MI_ID = 2;
@@ -63,8 +62,7 @@ public class SistemaRespaldo1 extends UnicastRemoteObject implements IDetectorFa
     private static SistemaRespaldo1 instanciaRMI;
 
     private static ServerSocket servidorAplicacion = null;
-    
-//se fija si el nodo que le sigue en el anillo esta vivo
+
     public SistemaRespaldo1() throws RemoteException {
         super(MI_PUERTO_RMI);
         int condition = 1;
@@ -94,8 +92,6 @@ public class SistemaRespaldo1 extends UnicastRemoteObject implements IDetectorFa
     }
 
     @Override
-    //controla si algun servidor o respaldo caido volvio a levantarse.
-   //si el central vuelve, cierra fozosamente le puerto donde se abrio el respaldo
     public void estoyVivo(int id) throws RemoteException {
         if (id == 1) {
             M_CAIDO = false;

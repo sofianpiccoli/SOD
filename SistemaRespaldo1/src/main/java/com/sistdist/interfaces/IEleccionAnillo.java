@@ -3,7 +3,6 @@ package com.sistdist.interfaces;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
-
 /**
  *
  * @author dgera

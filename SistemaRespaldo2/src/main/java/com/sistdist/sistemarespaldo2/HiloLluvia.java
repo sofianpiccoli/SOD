@@ -10,7 +10,6 @@ import java.net.Socket;
  *
  * @author dgera
  */
-
 public class HiloLluvia extends Thread {
     private boolean on = true;
     ;

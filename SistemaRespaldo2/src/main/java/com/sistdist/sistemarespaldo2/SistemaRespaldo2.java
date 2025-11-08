@@ -18,12 +18,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
 /**
  *
  * @author dgera
  */
-
 public class SistemaRespaldo2 extends UnicastRemoteObject implements IDetectorFalla, IEleccionAnillo {
 
     private static final int MI_ID = 3;

@@ -18,9 +18,9 @@ public class HiloFertirrigacion extends Thread {
     public void run() {
         while (true) {
             try {
-                System.out.println("🧪 Fertirrigacion: Analizando mezclas. Esperando 10 segundos...");
+                System.out.println("🧪 Fertirrigación: Analizando mezclas. Esperando 10 segundos...");
                 Thread.sleep(10000);
-                System.out.println("⏳ Fertirrigacion SOLICITA el uso exclusivo de la bomba.");
+                System.out.println("⏳ Fertirrigación SOLICITA el uso exclusivo de la bomba.");
                 SistemaCentral.solicitarBomba(SistemaCentral.ESTADO_FERTIRRIGACION, 0);
 
                 try {
@@ -29,7 +29,7 @@ public class HiloFertirrigacion extends Thread {
 
                 } finally {
                     cerrarValvula(valvulaPW);
-                    System.out.println("✅ Fertirrigacion finaliza mezcla y LIBERA la bomba.");
+                    System.out.println("✅ Fertirrigación finaliza mezcla y LIBERA la bomba.");
 
                     SistemaCentral.liberarBomba(ID_FERTIRRIGACION); // Libera el recurso compartido
                 }

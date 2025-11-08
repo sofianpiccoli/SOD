@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author mirian
+ * @author sofianietopiccoli
  */
 public class HiloValvula extends Thread{
     private int parcela;

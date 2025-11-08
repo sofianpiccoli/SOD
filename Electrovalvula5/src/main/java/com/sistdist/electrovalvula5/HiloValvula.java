@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author mirian
+ * @author miria
  */
 public class HiloValvula extends Thread {
     private int parcela;

@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-
 /**
  *
  * @author dgera
  */
-//pasa a ser un cliente del sistema central.
+
 public class SistemaFertirrigacion {
 
     public static void main(String[] args) {

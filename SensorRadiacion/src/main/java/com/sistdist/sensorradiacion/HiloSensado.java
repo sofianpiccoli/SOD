@@ -10,7 +10,7 @@ import java.net.Socket;
 
 /**
  *
- * @author mirian
+ * @author miria
  */
 public class HiloSensado extends Thread{
     private boolean on;

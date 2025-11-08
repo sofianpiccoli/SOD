@@ -3,18 +3,18 @@ package com.sistdist.servidorexclusionmutua;
 import com.sistdist.interfaces.IServicioExclusionMutua;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
 /**
  *
  * @author lucianafigueroa
  */
 public class ServerExclusionMutuaRMI extends UnicastRemoteObject implements IServicioExclusionMutua {
-    //los estados segun quien este usando la bomba
     private static final int ESTADO_LIBRE = 0;
     private static final int ESTADO_RIEGO = 1;
     private static final int ESTADO_FERTIRRIGACION = 2;
 
-    private int parcelasRegandoCount = 0; //contador de parcelas regando
-    private final Object BOMBA_LOCK = new Object(); //objeto bloqueante
+    private int parcelasRegandoCount = 0;
+    private final Object BOMBA_LOCK = new Object();
     private int bombaEnUso = ESTADO_LIBRE;
 
     public ServerExclusionMutuaRMI() throws RemoteException {
@@ -31,7 +31,7 @@ public class ServerExclusionMutuaRMI extends UnicastRemoteObject implements ISer
     public void solicitarBombaRiego(int idParcela) throws RemoteException, InterruptedException {
         synchronized (BOMBA_LOCK) {
             while (bombaEnUso == ESTADO_FERTIRRIGACION) {
-                System.out.println("⏳ [El riego de la parcela " + idParcela + "] Espera. Bomba ocupada por FERTIRRIGACION.");
+                System.out.println("⏳ [Riego Parcela " + idParcela + "] Espera. Bomba ocupada por FERTIRRIGACIÓN.");
                 BOMBA_LOCK.wait();
             }
             if (bombaEnUso == ESTADO_LIBRE) {
@@ -46,11 +46,11 @@ public class ServerExclusionMutuaRMI extends UnicastRemoteObject implements ISer
     public void solicitarBombaFertirrigacion() throws RemoteException, InterruptedException {
         synchronized (BOMBA_LOCK) {
             while (bombaEnUso != ESTADO_LIBRE) {
-                System.out.println("⏳ [Fertirrigacion] Espera. Bomba ocupada por: " + (bombaEnUso == ESTADO_RIEGO ? "RIEGO" : "OTRA FERTIRRIGACION"));
+                System.out.println("⏳ [Fertirrigación] Espera. Bomba ocupada por: " + (bombaEnUso == ESTADO_RIEGO ? "RIEGO" : "OTRA FERTIRRIGACIÓN"));
                 BOMBA_LOCK.wait();
             }
             bombaEnUso = ESTADO_FERTIRRIGACION;
-            System.out.println("🔒 [Fertirrigacion] Bomba ADQUIRIDA. Exclusion Mutua activa.");
+            System.out.println("🔒 [Fertirrigación] Bomba ADQUIRIDA. Exclusión Mutua activa.");
         }
     }
 
@@ -63,7 +63,7 @@ public class ServerExclusionMutuaRMI extends UnicastRemoteObject implements ISer
                 if (parcelasRegandoCount <= 0) {
                     parcelasRegandoCount = 0;
                     bombaEnUso = ESTADO_LIBRE;
-                    System.out.println("🔓 [Riego] Ultima parcela LIBERO la bomba.");
+                    System.out.println("🔓 [Riego] Última parcela LIBERÓ la bomba.");
                     BOMBA_LOCK.notifyAll();
                 } else {
                     System.out.println("🔓 [Riego] Parcela liberada. Restan regando: " + parcelasRegandoCount);
@@ -72,7 +72,7 @@ public class ServerExclusionMutuaRMI extends UnicastRemoteObject implements ISer
             } else if (liberadorId == ESTADO_FERTIRRIGACION) {
                 if (bombaEnUso == ESTADO_FERTIRRIGACION) {
                     bombaEnUso = ESTADO_LIBRE;
-                    System.out.println("🔓 [Fertirrigacion] LIBERO la bomba. Notificando a todos.");
+                    System.out.println("🔓 [Fertirrigación] LIBERÓ la bomba. Notificando a todos.");
                     BOMBA_LOCK.notifyAll();
                 }
             }

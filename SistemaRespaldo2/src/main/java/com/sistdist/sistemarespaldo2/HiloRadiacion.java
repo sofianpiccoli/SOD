@@ -9,7 +9,6 @@ import java.net.Socket;
  *
  * @author dgera
  */
-
 public class HiloRadiacion extends Thread {
     private boolean on = true;
     ;

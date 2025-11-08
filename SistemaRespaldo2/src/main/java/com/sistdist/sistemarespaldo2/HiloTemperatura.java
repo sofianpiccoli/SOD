@@ -13,7 +13,6 @@ import java.net.Socket;
  *
  * @author dgera
  */
-
 public class HiloTemperatura extends Thread{
     private boolean on;
 

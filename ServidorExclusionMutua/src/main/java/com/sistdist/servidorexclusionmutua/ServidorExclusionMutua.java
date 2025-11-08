@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author lucianafigueroa
@@ -18,11 +19,11 @@ public class ServidorExclusionMutua {
         int nroPuertoExcMutua = 10000;
 
         try {
-            LocateRegistry.createRegistry(nroPuertoExcMutua);//crea el registro local
-            System.out.println("Registry de Exclusion Mutua listo en el puerto " + nroPuertoExcMutua);
-            ServerExclusionMutuaRMI serverEM = new ServerExclusionMutuaRMI();//crea el servidor de em
-            Naming.rebind("rmi://localhost:" + nroPuertoExcMutua  + "/servidorCentralEM", serverEM);//lo publica para ser accedido por otros
-            System.out.println("✅ Servidor de Exclusion Mutua para la bomba registrado y listo.");
+            LocateRegistry.createRegistry(nroPuertoExcMutua);
+            System.out.println("Registry de Exclusión Mutua listo en el puerto " + nroPuertoExcMutua);
+            ServerExclusionMutuaRMI serverEM = new ServerExclusionMutuaRMI();
+            Naming.rebind("rmi://localhost:" + nroPuertoExcMutua  + "/servidorCentralEM", serverEM);
+            System.out.println("✅ Servidor de Exclusión Mutua para la bomba registrado y listo.");
 
         } catch (RemoteException ex) {
             Logger.getLogger(ServidorExclusionMutua.class.getName()).log(Level.SEVERE, null, ex);
